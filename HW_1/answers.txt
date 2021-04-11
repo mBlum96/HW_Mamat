@@ -1,0 +1,7 @@
+a) We think that doing the search by hand would have taken at least an hour.
+b) We found out that using a script to preform fast searches in text rich documents is faster and more accurate than doing it by hand.
+This kind of idea can be used in assignment that require searching specific expressions/patterns inside large data files.
+For example we can use this idea in order to find a specific combination of bits inside a large .bin file, a mission that will be nearly - impossible for humans.
+c) We can write a script that will keep track of time and will run our script every hour.
+If the website we use regex on displays the time, we can use a while loop that will preform the rest of the script only at a certain minute.
+We need to keep track of the players we already scanned. Meaning we will need to extract the end of the urls of the players we already scanned (using results.csv) and compare them to the urls of the newly scanned players, if there is a match, we will not scan that player.
