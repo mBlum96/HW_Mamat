@@ -24,3 +24,4 @@ mkdir $course_num"_stat"
 cat $course_num.txt | grep -Po '\t'"[0-9]+" > place_holder.txt
 cat place_holder.txt | grep -Po "[0-9]+" > grades.txt
 mv ./grades.txt ./$course_num"_stat"
+dir_path=$(echo $(pwd))
