@@ -96,8 +96,8 @@ int main(int argc, char *argv[]) {
     FILE *statistics_file;
     FILE *grades_file;
 
-    char *statistics_path;
-    char *grades_path;
+    char *statistics_path; // will contain the path to "course_statistics.txt"
+    char *grades_path; // will contain the path to "grades.txt"
     char *statistics_name = "/course_statistics.txt";
     char *grades_name = "/grades.txt";
     int num_students;
@@ -109,8 +109,11 @@ int main(int argc, char *argv[]) {
     float pass_rate;
     int histogram[HISTOGRAM_SIZE][HISTOGRAM_SIZE] = {0};
 
+
+    // creating sntrings that contain the paths to grades.txt and to
+    //course_statistics.txt
     statistics_path =
-    		(char*)malloc(strlen(argv[1])+strlen(statistics_name)*sizeof(char));
+    	(char*)malloc((strlen(argv[1])+strlen(statistics_name))*sizeof(char));
     grades_path =
        		(char*)malloc(strlen(argv[1])+strlen(grades_name)*sizeof(char));
     strcpy(statistics_path, argv[1]);
@@ -118,33 +121,47 @@ int main(int argc, char *argv[]) {
     strcat(statistics_path, statistics_name);
     strcat(grades_path, grades_name);
 
-    statistics_file = fopen(statistics_path, "w");
+    //opening the files
+    statistics_file = fopen(statistics_path, "w+");
     grades_file = fopen(grades_path, "r");
 
+    //finding the number of students that have a grade
     num_students = find_num_students(grades_file);
+
+    //creating and sorting an array of grades for calculations
     fseek(grades_file, 0, SEEK_SET);
     grades =
     		(int*)malloc(num_students*sizeof(int));
-
     build_grades_array(grades_file, num_students, grades);
-    average_grade = find_grades_average(grades, num_students);
     bubble_sort(grades, num_students);//sorting the grades array
-    /*for(int i=0; i<num_students; i++){
-    	printf("%d \n" ,grades[i]);
-    }*/
+
+    //calculating statistics- avg, median, min, max, histogram
+    average_grade = find_grades_average(grades, num_students);
     median_grade = find_median_grade(grades, num_students);
     max_grade = grades[num_students - 1];
     min_grade = grades[0];
-    //printf("%d \n", median_grade);
     pass_rate = find_pass_percent(grades, num_students);
     create_histogram(num_students, grades, histogram);
+
+
+    // writing the statistics to course_statistics.txt
+    fprintf(statistics_file, "num of students = %d\n"
+    		"avg = %.3f\n"
+    		"the median is - %d\n"
+    		"max grade = %d, min grade = %d\n"
+    		"pass rate = %.2f%%\n",
+			num_students, average_grade, median_grade
+			, max_grade, min_grade, pass_rate);
+
+    //writing the histogram to course_statistics.txt
     for(int i=0; i<HISTOGRAM_SIZE; i++){
     	for(int j=0; j<HISTOGRAM_SIZE; j++){
-    		printf("%d ", histogram[i][j]);
+    		fprintf(statistics_file,"%d ", histogram[i][j]);
     	}
-    	printf("\n");
+    	fprintf(statistics_file, "\n");
     }
 
+    //closing the files
     fclose(statistics_file);
     fclose(grades_file);
     return 0;
