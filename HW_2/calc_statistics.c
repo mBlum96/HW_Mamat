@@ -114,8 +114,16 @@ int main(int argc, char *argv[]) {
     //course_statistics.txt
     statistics_path =
     	(char*)malloc((strlen(argv[1])+strlen(statistics_name))*sizeof(char));
+    if(statistics_path==NULL){
+    	printf("ERROR, memory not allocated!");
+    	return 1;
+    }
     grades_path =
        		(char*)malloc(strlen(argv[1])+strlen(grades_name)*sizeof(char));
+    if(grades_path==NULL){
+    	printf("ERROR, memory not allocated!");
+    	return 1;
+    }
     strcpy(statistics_path, argv[1]);
     strcpy(grades_path, argv[1]);
     strcat(statistics_path, statistics_name);
@@ -132,6 +140,10 @@ int main(int argc, char *argv[]) {
     fseek(grades_file, 0, SEEK_SET);
     grades =
     		(int*)malloc(num_students*sizeof(int));
+    if(grades==NULL){
+    	printf("ERROR, memory not allocated!");
+    	return 1;
+    }
     build_grades_array(grades_file, num_students, grades);
     bubble_sort(grades, num_students);//sorting the grades array
 
@@ -160,6 +172,11 @@ int main(int argc, char *argv[]) {
     	}
     	fprintf(statistics_file, "\n");
     }
+
+    //freeing allocated memory
+    free(grades);
+    free(grades_path);
+    free(statistics_path);
 
     //closing the files
     fclose(statistics_file);
