@@ -115,13 +115,13 @@ int main(int argc, char *argv[]) {
     statistics_path =
     	(char*)malloc((strlen(argv[1])+strlen(statistics_name))*sizeof(char));
     if(statistics_path==NULL){
-    	printf("ERROR, memory not allocated!");
+    	fprintf(stderr,"ERROR, memory not allocated!");
     	return 1;
     }
     grades_path =
        		(char*)malloc(strlen(argv[1])+strlen(grades_name)*sizeof(char));
     if(grades_path==NULL){
-    	printf("ERROR, memory not allocated!");
+    	fprintf(stderr,"ERROR, memory not allocated!");
     	return 1;
     }
     strcpy(statistics_path, argv[1]);
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
     grades =
     		(int*)malloc(num_students*sizeof(int));
     if(grades==NULL){
-    	printf("ERROR, memory not allocated!");
+    	fprintf(stderr,"ERROR, memory not allocated!");
     	return 1;
     }
     build_grades_array(grades_file, num_students, grades);
