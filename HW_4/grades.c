@@ -4,8 +4,10 @@
 #include <linked-list.h>
 
 
+/**
+Put here comments in doxygen, if needed checkout the hello-world file
+ */
 
-/* Defining the needed structs */
 struct grades{
 	struct list *students;
 };
@@ -21,9 +23,6 @@ struct course{
 	int course_grade;
 };
 
-
-
-
 struct student* search_students_id (struct grades *grades, int id){
 	if (!grades){
 		return NULL;
@@ -36,7 +35,7 @@ struct student* search_students_id (struct grades *grades, int id){
 		if (list_p->id == id){
 			return list_p;
 		}
-		it =list_next(it);
+		it = list_next(it);
 	}
 	return NULL;
 }
@@ -58,12 +57,6 @@ struct course* search_course_name(struct student *student, char* course_name){
 	return NULL;
 }
 
-/**
- * @brief Used to clone course to the heap
- * @param element A pointer to the course we want to be cloned into the heap
- * @param output A pointer to the pointer of the course on the heap
- * @returns Value of 1 if there has been a problem and 0 if successful
- */
 int course_clone (void *element, void **output){
 	struct course *new_element = (struct course*) element;
 	struct course *copy_element =
@@ -82,22 +75,12 @@ int course_clone (void *element, void **output){
 	*output = (void*) copy_element;
 }
 
-/**
- * @brief De-allocates the heap memory taken by the course data struct
- * @param element A pointer to the course we want to destroy
- */
 void course_destroy(void *element){
 	struct course *destroy_element = (struct course*) element;
 	free(destroy_element->course_name);
 	free(destroy_element);
 }
 
-/**
- * @brief Used to clone student to the heap
- * @param element A pointer to the student we want to be cloned into the heap
- * @param output A pointer to the pointer of the student on the heap
- * @returns Value of 1 if there has been a problem and 0 if successful
- */
 int student_clone (void *element, void **output){
 	struct student *new_element = (struct student*) element;
 	struct student *copy_element =
@@ -121,11 +104,6 @@ int student_clone (void *element, void **output){
 	}
 	*output = (void*) copy_element;
 }
-
-/**
- * @brief De-allocates the heap memory taken by the student data struct
- * @param element A pointer to the student we want to destroy
- */
 void student_destroy (void *element){
 	struct student *destroy_element = (struct student*) element;
 	free(destroy_element->name);
@@ -134,49 +112,91 @@ void student_destroy (void *element){
 }
 
 
-/**
- * @brief Used to initiate the grades structure on the heap
- * @returns A pointer to the grades structure, NULL in case of error
- */
+//first function implementation
 struct grades* grades_init(){
-	struct grades *grades;
-	grades = (struct grades*)malloc(sizeof(struct grades));
-	if (!grades){
+	struct grades *Grades;
+	Grades = (struct grades*)malloc(sizeof(*Grades));
+	if (!Grades){
 		return NULL;
 	}
-	grades->students = list_init(student_clone,student_destroy);
-	if(grades->students == NULL)
+	Grades->students = list_init(student_clone,student_destroy);
+	if(Grades->students == NULL)
 	{
-		free(grades);
+		free(Grades);
 		return NULL;
 	}
-	return (grades);
+	return (Grades);
 }
 
-/**
- * @brief De-allocates all memory from the heap
- * @param grades Pointer to the data we want to de-allocate
- */
 void grades_destroy(struct grades *grades){
 	if (!grades){
 		return;
 	}
+
 	list_destroy(grades->students);
 	free(grades);
 }
 
+/**
+ * @brief Adds a student with "name" and "id" to "grades"
+ * @returns 0 on success
+ * @note Failes if "grades" is invalid, or a student with
+ * the same "id" already exists in "grades"
+ */
 int grades_add_student(struct grades *grades, const char *name, int id){
+	if (!grades){
+		return 1;
+	}
+	if (search_students_id (grades, id)==NULL){
+		struct student *new_student=
+				(struct student*)malloc(sizeof(struct student));
+		if (new_student=NULL){
+			return 1;
+		}
+		new_student->id= id;
+		new_student->name= (char*)malloc(sizeof(char)*(strlen(name)+1));
+		if (name=NULL){
+			free (new_student);
+			return 1;
+		}
+		srtcpy(new_student->name, name);
+		new_student-> courses= NULL;
+		int student_added= list_push_back(grades->students, new_student);
 
+		if (student_added!=0){
+			free(new_student-> name);
+			free(new_student);
+			return 1
+		}
+		free(new_student-> name);
+		free(new_student);
+		return 0
 
+	}
+	else{
+		return 1;
+	}
 }
 
-/**
- * @brief Adds a course with "name" and "grade" to the student with "id"
- * @return 0 on success
- * @note Failes if "grades" is invalid, if a student with "id" does not exist
- * in "grades", if the student already has a course with "name", or if "grade"
- * is not between 0 to 100.
- */
+
+struct student* search_students_id (struct grades *grades, int id){
+	if (!grades){
+		return NULL;
+	}
+	struct iterator *it = list_begin (grades ->students);
+	struct student *list_p;
+
+	while (it!=NULL){
+		list_p = list_get(it);
+		if (list_p->id == id){
+			return list_p;
+		}
+		it =list_next(it);
+	}
+	return NULL;
+}
+
+
 int grades_add_grade(struct grades *grades,
                      const char *name,
                      int id,
@@ -184,6 +204,9 @@ int grades_add_grade(struct grades *grades,
 	struct course *new_course;
 	new_course->course_grade = grade;
 	new_course->course_name = (char*)malloc(sizeof(char)*(strlen(name)+1));
+	if((new_course->course_name)==NULL){
+		return 0;
+	}
 	stcpy(new_course->course_name,name);
 	struct iterator *it_students = list_end(grades->students);
 	struct student *student_location = search_student_id(grades,id);
@@ -225,15 +248,28 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 
 }
 
-
-
-
-
-
-
-
-
-
+int grades_print_student(struct grades *grades, int id){
+	if(!grades){
+		return 1;
+	}
+	struct student *student_location = search_student_id(grades, id);
+	if(student_location != NULL){
+		printf("%s %d: ",student_location->name, student_location->id);
+		struct iterator *it = list_begin(student_location->courses);
+		struct course *current_course;
+		while(it != NULL){
+			current_course = list_get(it);
+			printf("%s %d, ",
+					current_course->course_name,current_course->course_grade);
+			it = list_next(it);
+		}
+		printf("\n");
+	}
+	else{
+		return 1;
+	}
+	return 0;
+}
 
 
 
