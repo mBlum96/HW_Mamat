@@ -181,25 +181,57 @@ int grades_add_grade(struct grades *grades,
                      const char *name,
                      int id,
                      int grade){
+	struct course *new_course;
+	new_course->course_grade = grade;
+	new_course->course_name = (char*)malloc(sizeof(char)*(strlen(name)+1));
+	stcpy(new_course->course_name,name);
 	struct iterator *it_students = list_end(grades->students);
 	struct student *student_location = search_student_id(grades,id);
+	if(grade>100 || grade<0){
+		return 1;
+	}
 	if(student_location!=NULL){
 		struct course *course_location =
-				search_course_name(student_location,name)
+				search_course_name(student_location,name);
 		if (course_location!=NULL){
 			return 1;
 		}
 		else{
-			struct iterator *it_courses = list_end(student_location->courses);
-
+			if(list_push_back(student_location->courses,new_course)==0){
+				return 0;
+			}
+			else{
+				return 1;
+			}
 		}
 	}
 	else{
 		return 1;
 	}
+}
 
+/**
+ * @brief Calcs the average of the student with "id" in "grades".
+ * @param[out] out This method sets the variable pointed by "out" to the
+ * student's name. Needs to allocate memory. The user is responsible for
+ * freeing the memory.
+ * @returns The average, or -1 on error
+ * @note Fails if "grades" is invalid, or if a student with "id" does not exist
+ * in "grades".
+ * @note If the student has no courses, the average is 0.
+ * @note On error, sets "out" to NULL.
+ */
+float grades_calc_avg(struct grades *grades, int id, char **out){
 
 }
+
+
+
+
+
+
+
+
 
 
 
