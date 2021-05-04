@@ -28,7 +28,7 @@ struct student* search_students_id (struct grades *grades, int id){
 	if (!grades){
 		return NULL;
 	}
-	struct iterator it = list_begin (grades->students);
+	struct iterator *it = list_begin (grades->students);
 	struct student *list_p;
 
 	while (it!=NULL){
@@ -41,11 +41,11 @@ struct student* search_students_id (struct grades *grades, int id){
 	return NULL;
 }
 
-struct course* search_course_name(struct grades *grades, char* course_name){
+struct course* search_course_name(struct student *student, char* course_name){
 	if(!grades){
 		return NULL;
 	}
-	struct iterator it = list_begin(grades->students);
+	struct iterator *it = list_begin(student->courses);
 	struct course *course_p;
 
 	while(it!=NULL){
@@ -170,13 +170,32 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 
 }
 
+/**
+ * @brief Adds a course with "name" and "grade" to the student with "id"
+ * @return 0 on success
+ * @note Failes if "grades" is invalid, if a student with "id" does not exist
+ * in "grades", if the student already has a course with "name", or if "grade"
+ * is not between 0 to 100.
+ */
 int grades_add_grade(struct grades *grades,
                      const char *name,
                      int id,
                      int grade){
+	struct iterator *it_students = list_end(grades->students);
 	struct student *student_location = search_student_id(grades,id);
-	if(student_location!=0){
+	if(student_location!=NULL){
+		struct course *course_location =
+				search_course_name(student_location,name)
+		if (course_location!=NULL){
+			return 1;
+		}
+		else{
+			struct iterator *it_courses = list_end(student_location->courses);
 
+		}
+	}
+	else{
+		return 1;
 	}
 
 
