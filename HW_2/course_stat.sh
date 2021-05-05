@@ -2,8 +2,7 @@
 #This bash script manages the task of creating a course statistic.
 #The script checks for the right arguments, creates the right directories
 #and compiles and runs the right files.
-echo "Enter course number:"
-read course_num
+course_num=$1
 course_num_count=$(echo $course_num | wc -m)
 ((course_num_count=course_num_count-1))
 
