@@ -375,12 +375,12 @@ int grades_print_student(struct grades *grades, int id){
 		while(it != NULL){
 			current_course = list_get(it);
 			if(it != end_it){
-				printf("%s %d, ",
+				printf(" %s %d,",
 						current_course->course_name,
 						current_course->course_grade);
 			}
 			else{
-				printf("%s %d\n",
+				printf(" %s %d\n",
 						current_course->course_name,
 						current_course->course_grade);
 				return 0;
