@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <grades.h>
 #include <linked-list.h>
+enum grade_consts {
+	TOP_GRADE = 100,
+	BOTTOM_GRADE = 0
+};
 
 /**
  * @brief Function declarations
@@ -255,7 +259,7 @@ int grades_add_grade(struct grades *grades,
 	stcpy(new_course->course_name,name);
 	struct iterator *it_students = list_end(grades->students);
 	struct student *student_location = search_student_id(grades,id);
-	if(grade>100 || grade<0){
+	if(grade>TOP_GRADE || grade<BOTTOM_GRADE){
 		return 1;
 	}
 	if(student_location!=NULL){
