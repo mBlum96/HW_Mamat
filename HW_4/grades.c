@@ -367,9 +367,13 @@ int grades_print_student(struct grades *grades, int id){
 		printf(" %d:", student_location->id);
 		struct iterator *it = list_begin(student_location->courses);
 		struct iterator *end_it = list_end(student_location->courses);
-		if (it==end_it){
+		int num_of_courses = list_size(student_location->courses);
+		if(num_of_courses==0){
 			printf("\n");
 			return 0;
+		}
+		if(num_of_courses<0){
+			return 1;
 		}
 		struct course *current_course;
 		while(it != NULL){
@@ -406,11 +410,10 @@ int grades_print_all(struct grades *grades){
 	if(!grades){
 		return 1;
 	}
-	int student_counter = list_size(grades->students);
 	struct iterator *student_it = list_begin(grades->students);
 	struct iterator *student_end_it = list_end(grades->students);
 	struct student *curr_student;
-	for(int i=0; i<student_counter; i++){
+	while(student_it != NULL){
 		curr_student = list_get(student_it);
 		if(grades_print_student(grades,curr_student->id)!=0){
 			return 1;
@@ -420,7 +423,7 @@ int grades_print_all(struct grades *grades){
 		}
 		student_it = list_next(student_it);
 	}
-	return 1;
+	return 0;
 }
 
 
