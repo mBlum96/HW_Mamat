@@ -313,7 +313,12 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 	struct iterator *course_it;
 	struct iterator *course_end_it;
 	if(student_location != NULL){
-		*out = student_location->name;
+		*out = (char*)malloc(sizeof(char)*(strlen(student_location->name)+1));
+		if(!*out){
+			*out = NULL;
+			return -1;
+		}
+		strcpy(*out,student_location->name);
 		struct course *curr_course;
 		course_it = list_begin(student_location->courses);
 		course_end_it = list_end(student_location->courses);
@@ -358,9 +363,14 @@ int grades_print_student(struct grades *grades, int id){
 	}
 	struct student *student_location = search_student_id(grades, id);
 	if(student_location != NULL){
-		printf("%s %d: ",student_location->name, student_location->id);
+		printf("%s",student_location->name);
+		printf(" %d: ", student_location->id);
 		struct iterator *it = list_begin(student_location->courses);
 		struct iterator *end_it = list_end(student_location->courses);
+		if (it==end_it){
+			printf("\n");
+			return 0;
+		}
 		struct course *current_course;
 		while(it != NULL){
 			current_course = list_get(it);
@@ -377,10 +387,6 @@ int grades_print_student(struct grades *grades, int id){
 			}
 			it = list_next(it);
 		}
-		printf("\n");
-	}
-	else{
-		return 1;
 	}
 	return 1;
 }
