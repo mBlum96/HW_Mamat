@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <grades.h>
-#include <linked-list.h>
+#include <string.h>
+#include "grades.h"
+#include "linked-list.h"
+
 enum grade_consts {
 	TOP_GRADE = 100,
 	BOTTOM_GRADE = 0
@@ -20,6 +22,9 @@ int grades_add_grade(struct grades *grades,
 float grades_calc_avg(struct grades *grades, int id, char **out);
 int grades_print_student(struct grades *grades, int id);
 int grades_print_all(struct grades *grades);
+struct student* search_student_id (struct grades *grades,const int id);
+struct course* search_course_name(struct student *student,
+		const char* course_name);
 
 /**
  * @brief Structures declarations
@@ -46,17 +51,21 @@ struct course{
  * returns A pointer to student of whose id was supplied
  * @note if there is no student with that id, returns NULL
  */
-struct student* search_students_id (struct grades *grades, int id){
+struct student* search_student_id (struct grades *grades, const int id){
 	if (!grades){
 		return NULL;
 	}
-	struct iterator *it = list_begin (grades->students);
-	struct student *list_p;
+	struct iterator *it = list_begin(grades->students);
+	struct iterator *end_it = list_end(grades->students);
+	struct student *curr_student;
 
-	while (it!=NULL){
-		list_p = list_get(it);
-		if (list_p->id == id){
-			return list_p;
+	while(it!=NULL){
+		curr_student = list_get(it);
+		if(curr_student->id == id){
+			return curr_student;
+		}
+		if(it==end_it){
+			return NULL;
 		}
 		it = list_next(it);
 	}
@@ -71,7 +80,8 @@ struct student* search_students_id (struct grades *grades, int id){
  * @note Fails if "student" is invalid or the course is not found
  * @note Returns NULL on failure.
  */
-struct course* search_course_name(struct student *student, char* course_name){
+struct course* search_course_name(struct student *student,
+		const char* course_name){
 	if(!student){
 		return NULL;
 	}
@@ -80,7 +90,7 @@ struct course* search_course_name(struct student *student, char* course_name){
 
 	while(it!=NULL){
 		course_p = list_get(it);
-		if (strcmp(course_p->course_name,course_name)==0){
+		if(strcmp(course_p->course_name,course_name)==0){
 			return course_p;
 		}
 		it = list_next(it);
@@ -193,7 +203,6 @@ void grades_destroy(struct grades *grades){
 	if (!grades){
 		return;
 	}
-
 	list_destroy(grades->students);
 	free(grades);
 }
@@ -208,30 +217,30 @@ int grades_add_student(struct grades *grades, const char *name, int id){
 	if (!grades){
 		return 1;
 	}
-	if (search_students_id (grades, id)==NULL){
+	if (search_student_id(grades, id)==NULL){
 		struct student *new_student=
 				(struct student*)malloc(sizeof(struct student));
-		if (new_student=NULL){
+		if (new_student==NULL){
 			return 1;
 		}
 		new_student->id= id;
 		new_student->name= (char*)malloc(sizeof(char)*(strlen(name)+1));
-		if (name=NULL){
+		if (name==NULL){
 			free (new_student);
 			return 1;
 		}
-		srtcpy(new_student->name, name);
+		strcpy(new_student->name, name);
 		new_student-> courses= NULL;
 		int student_added= list_push_back(grades->students, new_student);
 
 		if (student_added!=0){
 			free(new_student-> name);
 			free(new_student);
-			return 1
+			return 1;
 		}
 		free(new_student-> name);
 		free(new_student);
-		return 0
+		return 0;
 
 	}
 	else{
@@ -251,13 +260,14 @@ int grades_add_grade(struct grades *grades,
                      int id,
                      int grade){
 	struct course *new_course;
+	new_course = (struct course*)malloc(sizeof(struct course));
 	new_course->course_grade = grade;
 	new_course->course_name = (char*)malloc(sizeof(char)*(strlen(name)+1));
 	if((new_course->course_name)==NULL){
 		return 0;
 	}
-	stcpy(new_course->course_name,name);
-	struct iterator *it_students = list_end(grades->students);
+	strcpy(new_course->course_name,name);
+	//struct iterator *it_students = list_end(grades->students);
 	struct student *student_location = search_student_id(grades,id);
 	if(grade>TOP_GRADE || grade<BOTTOM_GRADE){
 		return 1;
@@ -312,7 +322,7 @@ float grades_calc_avg(struct grades *grades, int id, char **out){
 			return 0;
 		}
 		if(course_counter < 0){
-			*out = NULL
+			*out = NULL;
 			return -1;
 		}
 		while (course_it != NULL){
@@ -402,7 +412,7 @@ int grades_print_all(struct grades *grades){
 		if(student_it == student_end_it){
 			return 0;
 		}
-		student_it = list_next(grades->students);
+		student_it = list_next(student_it);
 	}
 	return 1;
 }
