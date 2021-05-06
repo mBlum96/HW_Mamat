@@ -364,7 +364,7 @@ int grades_print_student(struct grades *grades, int id){
 	struct student *student_location = search_student_id(grades, id);
 	if(student_location != NULL){
 		printf("%s",student_location->name);
-		printf(" %d: ", student_location->id);
+		printf(" %d:", student_location->id);
 		struct iterator *it = list_begin(student_location->courses);
 		struct iterator *end_it = list_end(student_location->courses);
 		if (it==end_it){
