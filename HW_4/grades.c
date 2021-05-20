@@ -22,9 +22,13 @@ int grades_add_grade(struct grades *grades,
 float grades_calc_avg(struct grades *grades, int id, char **out);
 int grades_print_student(struct grades *grades, int id);
 int grades_print_all(struct grades *grades);
-struct student* search_student_id (struct grades *grades,const int id);
-struct course* search_course_name(struct student *student,
+static struct student* search_student_id (struct grades *grades,const int id);
+static struct course* search_course_name(struct student *student,
 		const char* course_name);
+static int course_clone (void *element, void **output);
+static void course_destroy(void *element);
+static int student_clone (void *element, void **output);
+static void student_destroy (void *element);
 
 /**
  * @brief Structures declarations
@@ -51,7 +55,7 @@ struct course{
  * returns A pointer to student of whose id was supplied
  * @note if there is no student with that id, returns NULL
  */
-struct student* search_student_id (struct grades *grades, const int id){
+static struct student* search_student_id (struct grades *grades, const int id){
 	if (!grades){
 		return NULL;
 	}
@@ -80,7 +84,7 @@ struct student* search_student_id (struct grades *grades, const int id){
  * @note Fails if "student" is invalid or the course is not found
  * @note Returns NULL on failure.
  */
-struct course* search_course_name(struct student *student,
+static struct course* search_course_name(struct student *student,
 		const char* course_name){
 	if(!student){
 		return NULL;
@@ -106,7 +110,7 @@ struct course* search_course_name(struct student *student,
  * allocated course
  * @returns 0 on success or 1 on error
  */
-int course_clone (void *element, void **output){
+static int course_clone (void *element, void **output){
 	struct course *new_element = (struct course*) element;
 	struct course *copy_element =
 			(struct course*)malloc(sizeof(struct course));
@@ -129,7 +133,7 @@ int course_clone (void *element, void **output){
  * @brief Deallocates heap memory storing a certain course
  * @param element A pointer to the course we want to deallocate
  */
-void course_destroy(void *element){
+static void course_destroy(void *element){
 	struct course *destroy_element = (struct course*) element;
 	free(destroy_element->course_name);
 	free(destroy_element);
@@ -143,7 +147,7 @@ void course_destroy(void *element){
  * allocated student
  * @returns 0 on success or 1 on error
  */
-int student_clone (void *element, void **output){
+static int student_clone (void *element, void **output){
 	struct student *new_element = (struct student*) element;
 	struct student *copy_element =
 			(struct student*)malloc(sizeof(struct student));
@@ -172,7 +176,7 @@ int student_clone (void *element, void **output){
  * @brief Deallocates heap memory storing a certain student
  * @param element A pointer to the student we want to deallocate
  */
-void student_destroy (void *element){
+static void student_destroy (void *element){
 	struct student *destroy_element = (struct student*) element;
 	free(destroy_element->name);
 	list_destroy(destroy_element->courses);
