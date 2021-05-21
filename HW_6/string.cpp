@@ -46,6 +46,7 @@ public:
         delete data;
         data=new char[strlen(rhs.data)+1]();
         strcpy(data,rhs.data);
+        length = rhs.length;
         return *this;
 }
 
@@ -54,7 +55,7 @@ public:
      */
     String& String::operator=(const char *str){
         delete data;
-
+        length = strlen(str);
         data=new char[strlen(str)+1];
         strcpy(data,str);
         return *this;
@@ -83,9 +84,12 @@ public:
      * compute "size".
      */
 
-
-    void String::split(const char *delimiters, String **output, size_t *size) const{
-        String *copy = String(this);
+    //the problem with this method is that there is code repetitiveness:
+    // first in order to find out how many mini strings we have and then
+    // in order to find copy each one of them to the array
+    // need to figure out how to avoid the repetition
+    void String::split(const char *delimiters, String **output,
+    		size_t *size) const{
         char *throwaway_str;
         int counter = 0;
         throwaway_str = strtok(this->data,delimiters);
@@ -93,13 +97,19 @@ public:
         	counter ++;
         	throwaway_str = strtok(NULL,delimiters);
         }
-        output = new char[counter]();
-        throwaway_str = strtok(this->data,delimiters);
-        while (throwaway_str!=NULL){
-        	*output = throwaway_str;
-            output++;
-        	throwaway_str = strtok(NULL,delimiters);
+        if(output!=NULL){
+            String *copy_string = new String*[counter]();
+            throwaway_str = strtok(this->data,delimiters);
+            int i=0;
+            while (throwaway_str!=NULL){
+            	copy_string[i] =throwaway_str;//we use the method we
+            	//implemented for copying char arrays into Strings
+                i++;
+            	throwaway_str = strtok(NULL,delimiters);
+            }
+            *output = copy_string;
         }
+        size = counter;
     }
 
     /**
@@ -115,31 +125,28 @@ public:
      * Does not change this.
      */
     String String::trim() const{
-        char *copied_string = new char[length+1];
+        String return_string;
+        char *copied_string[length];
         int leading_index = 0;
-        int counter = 0;
         int trailing_index = (int)length - 1;
+        int counter = 0;
         strcpy(copied_string,data);
-
         while (copied_string[leading_index] == SPACE) {
             leading_index++;
         }
         while (copied_string[trailing_index] == SPACE) {
             trailing_index--;
         }
-
         int len_after_trim = trailing_index-leading_index;
-
-        char* clean_string = new char[len_after_trim+1]();
+        char* clean_string[len_after_trim];
         int i = 0;
-        
-        //need to make sure
-        
         while (leading_index <= trailing_index){
             clean_string[i] = data[leading_index];
             leading_index++;
             i++;
         }
+        return_string =clean_string;
+        return return_string;
     }
 };
 
