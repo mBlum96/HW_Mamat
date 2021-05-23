@@ -265,33 +265,42 @@ int grades_add_grade(struct grades *grades,
                      int grade){
 	struct course *new_course;
 	new_course = (struct course*)malloc(sizeof(struct course));
+	if (new_course == NULL){
+		free(new_course);
+		return 1;
+	}
 	new_course->course_grade = grade;
 	new_course->course_name = (char*)malloc(sizeof(char)*(strlen(name)+1));
 	if((new_course->course_name)==NULL){
+		course_destroy(new_course);
 		return 0;
 	}
 	strcpy(new_course->course_name,name);
-	//struct iterator *it_students = list_end(grades->students);
 	struct student *student_location = search_student_id(grades,id);
 	if(grade>TOP_GRADE || grade<BOTTOM_GRADE){
+		course_destroy(new_course);
 		return 1;
 	}
 	if(student_location!=NULL){
 		struct course *course_location =
 				search_course_name(student_location,name);
 		if (course_location!=NULL){
+			course_destroy(new_course);
 			return 1;
 		}
 		else{
 			if(list_push_back(student_location->courses,new_course)==0){
+				course_destroy(new_course);
 				return 0;
 			}
 			else{
+				course_destroy(new_course);
 				return 1;
 			}
 		}
 	}
 	else{
+		course_destroy(new_course);
 		return 1;
 	}
 }
