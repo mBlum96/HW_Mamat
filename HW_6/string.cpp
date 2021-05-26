@@ -1,18 +1,18 @@
 #include <iostream>
+#include <cstring>
+#include "string.h"
+
 
 #define SPACE ' '
 
-class String {
-    char *data;
-    size_t length;
+using namespace std;
 
-public:
 
     /**
      * @brief Initiates an empty string
      */
     String::String(){
-        this->data = new char[1]('\0');
+        this->data = NULL;
         this->length = 0;
     }
 
