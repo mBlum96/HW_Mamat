@@ -1,110 +1,47 @@
 #include <iostream>
+#include <cstring>
+#include "string.h"
+#include "ip.h"
+#include "port.h"
+#include "libinput.so"
 
-class String {
-    char *data;
-    size_t length;
+//firewall.exe ip-dst.....
+// ip-dst=120.0.0.0/8
 
-public:
+using namespace std;
 
-    /**
-     * @brief Initiates an empty string
-     */
-    String::String(){
-        this->data = '\0';
-        this->length = 0;
+int main(int argc, char**argv){
+    if (check_arg(argc,argv) != 0){
+        return 0;
     }
 
-    /**
-     * @brief Initiates string from other string
-     */
-    String::String(const String &str){
-        strcpy(this->data,str.data);
-        this->length = strlen(str.data);
+    String gen_rule = String(argv[1]);
+
+    String *rule_fields; //***-ip=***.***.***.***/* or ***-port= *** - ***
+    size_t rule_fields_size = 0;
+    String *numbers;
+    // dst-ip=120.0.0.0/8
+    gen_rule.split("=", &rule_fields , &rule_fields_size);
+
+    String *type;
+    size_t type_sizes; //
+
+    rule_fields[0].trim();
+    rule_fields[1].trim();
+
+    rule_fields[0].split("-", &type, &type_sizes); //
+
+    type[0].trim();
+    type[1].trim();
+
+    if (type[0].equals("ip")){
+        Ip ip_rule = Ip(type[1]);
+        ip_rule.set_value(rule_fields[1]);
+
+
+
     }
 
-    /**
-     * @brief Initiates a string from char array
-     */
-    String::String(const char *str){
-        strcpy(data,str);
-        length = strlen(str);
-    }
 
 
-    String::~String(){
-        delete[] data;
-    }
-
-    /**
-     * @brief Changes this from String
-     */
-    String& String::operator=(const String &rhs){
-        delete data;
-
-        data=new char[strlen(rhs.data)+1]();
-        strcpy(data,rhs.data);
-        return *this;
 }
-
-    /**
-     * @brief Changes this from char array
-     */
-    String& String::operator=(const char *str){
-        delete data;
-
-        data=new char[strlen(str)+1];
-        strcpy(data,str);
-        return *this;
-    }
-
-    /**
-     * @brief Returns true iff the contents of this equals to the
-     * contents of rhs
-     */
-    bool String::equals(const String &rhs) const{
-        return !strcmp(rhs.data, this->data);
-    }
-
-    /**
-     * @brief Returns true iff the contents of this equals to rhs
-     */
-    bool String::equals(const char *rhs) const{
-        return !strcmp(rhs, this->data);
-    }
-
-    /**
-     * @brief Splits this to several sub-strings according to delimiters.
-     * Allocates memory for output that the user must delete (using delete[]).
-     * @note Does not affect this.
-     * @note If "output" is set to NULL, do not allocated memory, only
-     * compute "size".
-     */
-
-
-    void String::split(const char *delimiters, String **output, size_t *size) const{
-        String *copy = String(this);
-
-
-    }
-
-    /**
-     * @brief Try to convert this to an integer. Returns 0 on error.
-     */
-    int String::to_integer() const;
-
-    /**
-     * @brief Remove any leading or trailing white-spaces.
-     * Does not change this.
-     */
-    String String::trim() const;
-
-};
-
-//String *a = new String();
-//String *b = new String(a);
-//char str[5] = "abcd";
-//String *c = new String(str);
-//~String();
-
-
-
