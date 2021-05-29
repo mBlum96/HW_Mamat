@@ -1,6 +1,4 @@
-//
-// Created by Yossi Meshulam on 26.5.2021.
-//
+
 
 #ifndef HW6_IP_H
 #define HW6_IP_H
@@ -16,9 +14,9 @@ private:
 
 
 
-
 protected:
     virtual bool match_value(String packet);
+    int ip_to_bin(String input_ip);
 public:
     Ip(String pattern);
     virtual ~Ip();

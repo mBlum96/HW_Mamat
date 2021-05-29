@@ -100,6 +100,7 @@ using namespace std;
             output++;
         	throwaway_str = strtok(NULL,delimiters);
         }
+        size = length(*output);
     }
 
     /**
