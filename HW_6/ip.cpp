@@ -9,9 +9,11 @@ enum ip_consts {
 }
 Ip::Ip(String pattern){
     this->pattern = pattern;
+    this->number_of_bits_to_check;
+    this->mask;
+    this->type;
 }
 Ip::~Ip(){
-
 }
 
 int Ip::ip_to_bin(String input_ip){

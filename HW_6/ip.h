@@ -8,7 +8,7 @@ private:
     String pattern; //pattern = 'dst-ip=100.200.3.4/10'
 
    // 100.22.311.222/10
-    char *type; // type 'dst-ip'
+    //String type; // type 'dst-ip', no need for type when we got pattern, I think.
     int mask; // mask = '111100111000000000'
     int number_of_bits_to_check;
 
