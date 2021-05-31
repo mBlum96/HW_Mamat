@@ -4,7 +4,8 @@
 #include "field.h"
 
 enum ip_consts {
-    FIELD_SIZE = 8
+    FIELD_SIZE = 8,
+    VALUE_SEPARATOR = "="
 }
 Ip::Ip(String pattern){
     this->pattern = pattern;
@@ -44,46 +45,36 @@ bool Ip::set_value(String val) {
         delete[](ip_rule);
         return false;
     }
-
     this->number_of_bits_to_check = ip_rule[1];
-
     String *ip_num;
     size_t ip_fields_size;
-
-    //val.split('.', ip_num, ip_fields_size);
     if (ip_fields_size != 4){
         delete[](ip_rule);
         return false;
     }
-
-    /*int shift = 24, binary_ip = 0, i = 0;
-    while (shift != 0){
-        binary_ip += (ip_rule[i].to_integer() << shift);
-        shift -= 8;
-        i++;
-    }*/
     binary_mask = ip_to_bin(val);
     this->mask = binary_ip >> (32 - this->number_of_bits_to_check);
 
 }
 //##############check wether it is a good idea to pass a pointer
-virtual bool Ip::match_value(String *packet){
-    return (this.equals(packet));
-    //maybe need to make the "type" field inside of a String instead of char*
-}
-
-virtual bool Ip::match(String *packet){
-    if (this.match_value(packet)){
-        binary_packet = ip_to_bin(packet);
-        //bellow we first shift right and then left in order to replace
-        //the bits beyond the mask rule with zeros
-        binary_packet>>this->number_of_bits_to_check
-        binary_packet<<this->number_of_bits_to_check
-        if(binary_packet & this->mask==true){
-            return true;
-    }
+virtual bool Ip::match_value(String packet){
+    binary_packet = ip_to_bin(packet);
+    //bellow we first shift right and then left in order to replace
+    //the bits beyond the mask rule with zeros
+    binary_packet>>this->number_of_bits_to_check
+    binary_packet<<this->number_of_bits_to_check
+    if(binary_packet & this->mask==true){
+        return true;
     return false;
 }
 
+bool Ip::match(String packet){
+    String *packet_field_subfields;
+    packet.split(VALUE_SEPARATOR,packet_field_subfields,
+        packet_field_subfields->length);
+    if (this->type.equals(packet_field_subfields[0])){
+        return match_value(packet_field_subfields[1]);
+    }
+}
 
 Ip::match_value(String packet){ return }
