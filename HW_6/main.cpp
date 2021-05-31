@@ -24,6 +24,7 @@ enum main_consts {
 
 using namespace std;
 
+
 //message splitter splits the messages, we pass references so that it will
 //change them on main and the changes won't delete
 void message_splitter(char *delimiter, String *src_string,
@@ -60,11 +61,15 @@ int main(int argc, char**argv){
         Ip ip_rule = Ip(rule_type[1]);
         ip_rule.set_value(rule_fields[1]);
         if (rule_type[1].equals('dst')){
-            ip_rule.match(packet_dst_ip);
+            if(ip_rule.match(packet_dst_ip)){
+                print("%s",packet_dst_ip->data);
+            }
         }
         else{
             if (rule_type[1].equals('src')){
-                ip_rule.match(packet_src_ip);
+                if(ip_rule.match(packet_src_ip)){
+                    print("%s",packet_src_ip->data);
+                }
             }
         }
 }
