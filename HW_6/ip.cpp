@@ -66,15 +66,21 @@ bool Ip::set_value(String val) {
     this->mask = binary_ip >> (32 - this->number_of_bits_to_check);
 
 }
+//##############check wether it is a good idea to pass a pointer
+virtual bool Ip::match_value(String *packet){
+    return (this.equals(packet));
+    //maybe need to make the "type" field inside of a String instead of char*
+}
 
-virtual bool Ip::match_value(String packet){
-    binary_packet = ip_to_bin(packet);
-    //bellow we first shift right and then left in order to replace
-    //the bits beyond the mask rule with zeros
-    binary_packet>>this->number_of_bits_to_check
-    binary_packet<<this->number_of_bits_to_check
-    if(binary_packet&this->mask==true){
-        return true;
+virtual bool Ip::match(String *packet){
+    if (this.match_value(packet)){
+        binary_packet = ip_to_bin(packet);
+        //bellow we first shift right and then left in order to replace
+        //the bits beyond the mask rule with zeros
+        binary_packet>>this->number_of_bits_to_check
+        binary_packet<<this->number_of_bits_to_check
+        if(binary_packet & this->mask==true){
+            return true;
     }
     return false;
 }
