@@ -6,11 +6,11 @@
 
 
 // We need to remember that spit allocates heap memeory, which needs to be released
-/**enum main_consts {
-    TYPE_VAL_SEPERATOR = "=",
-    PORT_RULE = "-",
-    IP_RULE = "/",
-    SUBTYPE_SEPERATOR = "-",
+#define TYPE_VAL_SEPARATOR "="
+#define PORT_RULE "-"
+#define IP_RULE "/"
+#define SUBTYPE_SEPARATOR "-"
+enum main_consts {
     NUMBER_OF_FIELDS = 4,
     SRC_IP_LOC = 0,
     DST_IP_LOC = 1,
@@ -25,98 +25,58 @@
 // src-ip=123.456.789.000,dst-ip=000.987.654.321,src-port=11,src-port=299
 
 using namespace std;
-**/
-/**
 //message splitter splits the messages, we pass references so that it will
 //change them on main and the changes won't delete
-void message_splitter(char *delimiter, String *src_string,
-                      String *output_str_arr){
-    src_string->split(delimiter, output_str_arr, output_str_arr->length);
-}
-void message_trimmer(String **array_of_strings){
-    for (int i=0; i<array_of_strings->length; i++){
+void message_trimmer(String *array_of_strings,size_t size_of_string){
+    for (unsigned int i=0; i<size_of_string; i++){
         array_of_strings[i].trim();
     }
 }
-void parsing_func(String *rule_type){
-    if (rule_type[0].equals("ip")){
-        Ip ip_rule = Ip(rule_type[1]);
-        ip_rule.set_value(rule_fields[1]);
-        parse_input(&ip_rule);
-    }
-    else{
-        if(rule_type[0].equals("port")){
-            Port port_rule = Port(rule_type[1]);
-            port_rule.set_value(rule_fields[1]);
-            parse_input(&port_rule);
-        }
-    }
-}
- **/
+//void parsing_func(String *rule_type){
+//    if (rule_type[0].equals("ip")){
+//        Ip ip_rule = Ip(rule_type[1]);
+//        ip_rule.set_value(rule_fields[1]);
+//        parse_input(&ip_rule);
+//    }
+//    else{
+//        if(rule_type[0].equals("port")){
+//            Port port_rule = Port(rule_type[1]);
+//            port_rule.set_value(rule_fields[1]);
+//            parse_input(&port_rule);
+//        }
+//    }
+//}
 
-/**int main(int argc, char**argv){
+
+int main(int argc, char**argv){
+    size_t type_size = 0;
+    size_t rule_fields_size = 0;
+    String *rule_type;
     if (check_args(argc,argv) != 0){
         return 0;
     }
     String gen_rule = argv[1];
-    char field_separator = TYPE_VAL_SEPERATOR;
-    String *rule_fields;***-ip=***.***.***.***//*** or ***-port= *** - ***
-    message_splitter(field_separator, gen_rule, rule_fields);
-    String *rule_type;
-    message_trimmer(rule_fields);
-    field_separator = SUBTYPE_SEPERATOR;
-    message_splitter(field_spearator,rule_fields[0],rule_type)
-    message_trimmer(rule_type);
-    parsing_func(rule_type);
-}
-*/
-
-int main(int argc, char**argv) {
-
-    if (check_args(argc, argv) != 0) {
-        return 0;
-    }
-
-    String gen_rule = String(argv[1]);
-
-    String *rule_fields; //***-ip=***.***.***.***/* or ***-port= *** - ***
-    size_t rule_fields_size = 0;
-    // dst-ip=120.0.0.0/8
+//    char field_separator;
+//    field_separator= TYPE_VAL_SEPARATOR;
+    String *rule_fields;
     gen_rule.split("=", &rule_fields, &rule_fields_size);
-
-    String *type;
-    size_t type_sizes; //
-
-    rule_fields[0].trim();
-    rule_fields[1].trim();
-    
-    printf("rule split by =\n");
-    printf("%s\n", rule_fields[0].data); //check
-    printf("%s\n", rule_fields[1].data); //check
-    
-
-    rule_fields[0].split("-", &type, &type_sizes);
-
-    type[0].trim();
-    type[1].trim();
-    
-    printf("rule split by -\n");
-    printf("%s\n", type[0].data); //check
-    printf("%s\n", type[1].data); //check
-    
-
-    if (type[1].equals("ip")) { //type[0] = ip
-        Ip ip_rule = Ip(type[1]); //type[1] = dst
-        ip_rule.set_value(rule_fields[1]);  //rule_fields[1] = 120.0.0.0/8
+    message_trimmer(rule_fields,rule_fields_size);
+//    field_separator = SUBTYPE_SEPARATOR;
+    rule_fields[0].split("-", &rule_type, &type_size);
+    message_trimmer(rule_type, type_size);
+    if (rule_type[1].equals("ip")){
+        //Ip ip_rule = Ip(rule_type[0]);
+        //Ip ip_rule = Ip(rule_fields[1]);
+        Ip ip_rule = Ip(rule_type[0]);
+        ip_rule.set_value(rule_fields[1]);
         parse_input(ip_rule);
     }
-
-    if (type[1].equals("port")) {
-        Port port_rule(type[1]);
-        parse_input(port_rule);
+    else{
+        if(rule_type[1].equals("port")){
+            Port port_rule = Port(rule_type[0]);
+            port_rule.set_value(rule_fields[1]);
+            parse_input(port_rule);
+        }
     }
-    delete[]rule_fields;
-    delete[]type;
-
     return 0;
 }
