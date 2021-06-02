@@ -5,6 +5,8 @@
 
 class Field {
 private:
+    Field();
+
     String pattern;
 protected:
     virtual bool match_value(String packet) const = 0;

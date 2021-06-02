@@ -1,25 +1,27 @@
 //
-// Created by Yossi Meshulam on 26.5.2021.
+// Created by Yossi Meshulam on 1.6.2021.
 //
-#ifndef PORT_H
-#define PORT_H
+
+#ifndef FIREWALL_PORT_H
+#define FIREWALL_PORT_H
 
 #include "string.h"
 #include "field.h"
 
 class Port : public Field {
-    private:
+private:
 
-    protected:
-        bool match_value(String packet);
-    public:
-     //   int value;
+protected:
+    using Field::match_value;
+    bool match_value(String packet) const;
+public:
+    //   int value;
     //    char* type;
-        int min_port;
-        int max_port;
-        Port(String pattern);
-        ~Ip();
-        bool set_value(String val);
-    };
+    int min_port;
+    int max_port;
+    Port(String pattern);
+    ~Port();
+    bool set_value(String val);
+};
 
 #endif
