@@ -1,9 +1,3 @@
-//
-// Created by Yossi Meshulam on 1.6.2021.
-//
-
-
-
 #include "ip.h"
 #include "string.h"
 #include "field.h"
@@ -15,14 +9,18 @@ enum {
 };
 
 Ip::Ip(String pattern) : Field(pattern){
-    number_of_bits_to_check = 0;
-    mask = 0;
+    this->number_of_bits_to_check = 0;
+    this->mask = 0;
 }
 
 Ip::~Ip() = default;
 
 
-int Ip::ip_to_bin(String input_ip){
+/**
+ * @brief helper function that turns strig of an ip address to int
+ */
+
+unsigned int Ip::ip_to_bin(String input_ip){
     String *ip_fields; //change here
     char field_separator[2] = ".";  //change here
     size_t number_of_fields;
@@ -30,9 +28,9 @@ int Ip::ip_to_bin(String input_ip){
     //I think the above input_ip->length is a mistake and needs to
     // be like this:
     input_ip.split(field_separator, &ip_fields, &number_of_fields);
-    int binary_ip_address = 0;
+    unsigned int binary_ip_address = 0;
     for (int i=0;i<NUM_OF_FIELDS;i++){
-        int ip_field_bin = ip_fields[i].to_integer();
+        unsigned int ip_field_bin = ip_fields[i].to_integer();
         if (i==0){
             binary_ip_address = ip_field_bin;
         }
