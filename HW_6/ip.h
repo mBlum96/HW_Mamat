@@ -16,7 +16,7 @@ private:
 protected:
 //    using Field::match_value;
     bool match_value(String packet) const;
-    static int ip_to_bin(String input_ip);
+ //   unsigned int ip_to_bin(String input_ip);
 public:
     Ip(String pattern);
     ~Ip();

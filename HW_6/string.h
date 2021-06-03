@@ -5,10 +5,11 @@
 #include <iostream>
 
 class String {
-    char *data;
-    size_t length;
 
 public:
+
+    char *data;
+    size_t length;
 
     /**
      * @brief Initiates an empty string

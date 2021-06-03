@@ -56,17 +56,12 @@ int main(int argc, char**argv){
         return 0;
     }
     String gen_rule = argv[1];
-//    char field_separator;
-//    field_separator= TYPE_VAL_SEPARATOR;
     String *rule_fields;
     gen_rule.split("=", &rule_fields, &rule_fields_size);
     message_trimmer(rule_fields,rule_fields_size);
-//    field_separator = SUBTYPE_SEPARATOR;
     rule_fields[0].split("-", &rule_type, &type_size);
     message_trimmer(rule_type, type_size);
     if (rule_type[1].equals("ip")){
-        //Ip ip_rule = Ip(rule_type[0]);
-        //Ip ip_rule = Ip(rule_fields[1]);
         Ip ip_rule = Ip(rule_type[0]);
         ip_rule.set_value(rule_fields[1]);
         parse_input(ip_rule);

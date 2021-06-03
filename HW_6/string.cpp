@@ -87,25 +87,116 @@ bool String::equals(const char *rhs) const{
  */
 
 
-void String::split(const char *delimiters, String **output, size_t *size) const{
+//void String::split(const char *delimiters, String **output, size_t *size) const{
     // delete copy
-    char *throwaway_str;
-    int counter = 0;
-    throwaway_str = strtok(this->data,delimiters);
-    while (throwaway_str!=nullptr){
-        counter ++;
-        throwaway_str = strtok(NULL,delimiters);
-    }
-    *output = new String[counter]; //change Char to String
-    throwaway_str = strtok(this->data,delimiters);
-    while (throwaway_str!=nullptr){
-        **output = String(throwaway_str); //change to copy constructor
-        output++;               //are we sure?
-        throwaway_str = strtok(nullptr,delimiters);
-    }
-    *size = counter; //change
-}
+//    char *throwaway_str;
+ //   int counter = 0;
+ //   throwaway_str = strtok(this->data,delimiters);
+  //  while (throwaway_str!=nullptr){
+  //      counter ++;
+  //      throwaway_str = strtok(NULL,delimiters);
+ //   }
+  //  *output = new String[counter]; //change Char to String
+  //  throwaway_str = strtok(this->data,delimiters);
+  //  while (throwaway_str!=nullptr){
+  //      **output = String(throwaway_str); //change to copy constructor
+  //      output++;               //are we sure?
+  //      throwaway_str = strtok(nullptr,delimiters);
+  //  }
+ //   *size = counter; //change
+//}
+//---------------------------------------------------------------------------------------------------
 
+void String::split(const char *delimiters, String **output, size_t *size) const{
+	if (delimiters == NULL || size == NULL){
+		return;
+	}
+	size_t num_of_strings = 1;
+	int left = 0;
+	int index = 0;
+	char deli[strlen(delimiters)+1];
+	strcpy(deli,delimiters);
+
+	if(this->data == NULL){
+		*size = 0;
+		*output = NULL;
+		return;
+	}
+	char tmp[length + 1];
+	strcpy(tmp,data);
+
+	/* count numbers of sub strings*/
+	 for(int j = 0; '\0' != tmp[j]; j++){
+	 	for(int i = 0; '\0' != deli[i]; i++){
+	 		if (deli[i] == tmp[j]){
+	 			num_of_strings +=1;
+	 		}
+	 	}
+	 }
+
+	 /* IF OUTPUT IS null go back with num of sub Strings*/
+	 if (output == NULL){
+		*size = num_of_strings;
+		return;
+	}	
+
+
+	if (num_of_strings == 1){
+		*output = new String[num_of_strings];
+		(*output)[index] = String(tmp);
+		*size = num_of_strings;
+		return;
+	}
+
+	
+	*output = new String[num_of_strings];
+	*size = num_of_strings;
+	if (output == NULL){
+		*size = num_of_strings;
+		return;
+	}
+
+
+	int startSplitFrom = 0;
+	/* special case if the input STARTS
+	 with 2 delimeters one after one*/
+	for(int i = 0; '\0' != deli[i]; i++){
+		if(tmp[0] == deli[i]){
+			(*output)[index] =String();
+			index = 1;
+	 		startSplitFrom = 1;
+		}
+	}
+
+	 for(int j = startSplitFrom; '\0' != tmp[j]; j++){
+	 	for(int i = 0; '\0' != deli[i]; i++){
+	 		if (deli[i] == tmp[j]){
+	 			if (left != j){
+	 			tmp[j] = '\0';
+	 			(*output)[index] =String(&tmp[left]);
+	 		}
+	 		else{
+	 			(*output)[index] =NULL;
+	 			 }
+	 			left = j+1;
+	 			index+=1; 	
+	 		}
+	 	}
+	}
+	/* special case if the input ENDS
+	 with 2 delimeters one after one*/
+	for(int i = 0; '\0' != deli[i]; i++){
+		if(tmp[length-1] == deli[i]){
+			(*output)[index] =NULL;
+		}
+		else{
+			(*output)[index] =String(&tmp[left]);
+		}
+	}
+
+	return;
+}
+//-----------------------------------------------------------------------------------------------------
 /**
  * @brief Try to convert this to an integer. Returns 0 on error.
  */
