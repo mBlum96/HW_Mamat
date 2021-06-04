@@ -7,10 +7,10 @@ enum {
     NUM_OF_FIELDS = 4,
 };
 
-Ip::Ip(String pattern, String type) : Field(pattern){//this doesn't work
+Ip::Ip(String pattern/*, String type*/) : Field(pattern){//this doesn't work
     number_of_bits_to_check = 0;
     mask = 0;
-    this->type = type;
+    //this->type = type;
 }
 
 Ip::~Ip() = default;
@@ -68,8 +68,8 @@ bool Ip::match_value(String packet) const{
     //bellow we first shift right and then left in order to replace
     //the bits beyond the mask rule with zero
     binary_packet = binary_packet >> (32-number_of_bits_to_check); // ;
-    packet_fields[0].trim();
-    if (((binary_packet ^ mask) == 0)&& (this->type.equals(packet_fields[0]))) { //change to xor opr
+//    packet_fields[0].trim();
+    if (((binary_packet ^ mask) == 0)/*&& (this->type.equals(packet_fields[0]))*/) { //change to xor opr
         //printf("binary packet XOR mask == 0 \n");
         return true;
     }

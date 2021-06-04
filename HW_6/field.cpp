@@ -32,6 +32,13 @@ bool Field::equals(const String &rhs) const{
 }
 
 bool Field :: match(String packet){
-    return this->match_value(packet);
+	String *packet_fields;
+	size_t packet_fields_size;
+    //printf("packet before cut %s \n",packet.data);
+    packet.split("=", &packet_fields, &packet_fields_size);
+    packet_fields[0].trim();
+	if (this->pattern.equals(packet_fields[0])){
+		return this->match_value(packet);
+	}
     return false;
 }

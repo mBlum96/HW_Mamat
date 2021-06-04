@@ -19,7 +19,7 @@ protected:
     //String type;
 //    static unsigned int ip_to_bin(String input_ip);
 public:
-    Ip(String pattern, String type);
+    Ip(String pattern/*, String type*/);
     ~Ip();
     bool set_value(String val);
 
