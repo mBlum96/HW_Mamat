@@ -1,7 +1,3 @@
-//
-// Created by Yossi Meshulam on 1.6.2021.
-//
-
 #include "port.h"
 #include "string.h"
 #include "field.h"
@@ -41,6 +37,7 @@ bool Port::set_value(String val){
 
 bool Port::match_value(String packet) const{
     int value = packet.to_integer();
-    return ((value > min_port) && (value < max_port)); //change here (clion advice)
+    return ((value >= min_port) && (value <= max_port));//made it <=,>= instead
+    //of <,>
 }
 

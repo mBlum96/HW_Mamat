@@ -1,7 +1,3 @@
-//
-// Created by Yossi Meshulam on 1.6.2021.
-//
-
 #include "field.h"
 #include <string.h>
 
@@ -38,7 +34,7 @@ bool Field :: match(String packet){
     packet.split("=", &packet_fields, &packet_fields_size);
     packet_fields[0].trim();
 	if (this->pattern.equals(packet_fields[0])){
-		return this->match_value(packet);
+		return this->match_value(packet_fields[1]);
 	}
     return false;
 }
