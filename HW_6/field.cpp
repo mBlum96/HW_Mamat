@@ -23,9 +23,9 @@ Field::Field(String pattern){
  */
 Field::~Field() {}
 
-bool Field::equals(const String &rhs) const{
-	return this->pattern.String::equals(rhs);
-}
+//bool Field::equals(const String &rhs) const{
+//	return this->pattern.String::equals(rhs);
+//}
 
 bool Field :: match(String packet){
 	String *packet_fields;
