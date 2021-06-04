@@ -1,9 +1,3 @@
-//
-// Created by Yossi Meshulam on 1.6.2021.
-//
-
-
-
 #include "ip.h"
 #include "string.h"
 #include "field.h"
@@ -13,15 +7,15 @@ enum {
     NUM_OF_FIELDS = 4,
 };
 
-Ip::Ip(String pattern) : Field(pattern){
+Ip::Ip(String pattern, String type) : Field(pattern){//this doesn't work
     number_of_bits_to_check = 0;
     mask = 0;
+    this->type = type;
 }
 
 Ip::~Ip() = default;
 
-
-unsigned int ip_to_bin(String input_ip){
+static unsigned int ip_to_bin(String input_ip){
     String *ip_fields; //change here
     char field_separator[2] = ".";  //change here
     size_t number_of_fields;
@@ -65,13 +59,18 @@ bool Ip::set_value(String val) {
 }
 
 bool Ip::match_value(String packet) const{
-    unsigned int binary_packet = ip_to_bin(packet); //change to unsigned
+	String *packet_fields;
+	size_t packet_fields_size;
+    //printf("packet before cut %s \n",packet.data);
+    packet.split("=", &packet_fields, &packet_fields_size);
+    //printf("packet after cut %s \n",packet_fields[1].data);
+    unsigned int binary_packet = ip_to_bin(packet_fields[1]);//change to unsigned
     //bellow we first shift right and then left in order to replace
     //the bits beyond the mask rule with zero
     binary_packet = binary_packet >> (32-number_of_bits_to_check); // ;
-    //binary_packet = binary_packet << (32-number_of_bits_to_check); // ;
-    if ((binary_packet ^ mask) == 0) { //change to xor opr
-        printf("binary packet XOR mask == 0 \n");
+    packet_fields[0].trim();
+    if (((binary_packet ^ mask) == 0)&& (this->type.equals(packet_fields[0]))) { //change to xor opr
+        //printf("binary packet XOR mask == 0 \n");
         return true;
     }
     return false;

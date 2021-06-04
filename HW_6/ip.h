@@ -12,13 +12,14 @@ private:
     //String type; // type 'dst-ip', no need for type when we got pattern, I think.
     int mask; // mask = '111100111000000000'
     int number_of_bits_to_check;
-
 protected:
 //    using Field::match_value;
+    String type;
     bool match_value(String packet) const;
- //   unsigned int ip_to_bin(String input_ip);
+    //String type;
+//    static unsigned int ip_to_bin(String input_ip);
 public:
-    Ip(String pattern);
+    Ip(String pattern, String type);
     ~Ip();
     bool set_value(String val);
 

@@ -27,6 +27,10 @@ Field::Field(String pattern){
  */
 Field::~Field() {}
 
+bool Field::equals(const String &rhs) const{
+	return this->pattern.String::equals(rhs);
+}
+
 bool Field :: match(String packet){
     return this->match_value(packet);
     return false;

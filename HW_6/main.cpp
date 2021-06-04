@@ -62,13 +62,13 @@ int main(int argc, char**argv){
     rule_fields[0].split("-", &rule_type, &type_size);
     message_trimmer(rule_type, type_size);
     if (rule_type[1].equals("ip")){
-        Ip ip_rule = Ip(rule_type[0]);
+        Ip ip_rule = Ip(rule_type[0],rule_fields[0]);
         ip_rule.set_value(rule_fields[1]);
         parse_input(ip_rule);
     }
     else{
         if(rule_type[1].equals("port")){
-            Port port_rule = Port(rule_type[0]);
+            Port port_rule = Port(rule_fields[0]);
             port_rule.set_value(rule_fields[1]);
             parse_input(port_rule);
         }

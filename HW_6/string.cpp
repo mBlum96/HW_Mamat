@@ -1,6 +1,5 @@
-//
-// Created by Yossi Meshulam on 1.6.2021.
-//
+#include <iostream>
+#include <cstring>
 #include <string.h>
 #include "string.h"
 
@@ -31,9 +30,15 @@ String::String(const String &str){
  * @brief Initiates a string from char array
  */
 String::String(const char *str){
-    length = strlen(str);
-    data = new char[length+1]();
-    strcpy(data,str);
+//	if(str == NULL || strlen(str) == 0){
+//		data = nullptr;
+//		length = 0;
+//	}
+//	else{
+		length = strlen(str);
+		data = new char[length+1]();
+		strcpy(data,str);
+//	}
 }
 
 
