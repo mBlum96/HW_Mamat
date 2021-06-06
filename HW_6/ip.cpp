@@ -33,8 +33,10 @@ static unsigned int ip_to_bin(String input_ip){
             binary_ip_address = binary_ip_address << FIELD_SIZE; //comp
             binary_ip_address = binary_ip_address | ip_field_bin;
         }
+       
 
     }
+    delete[](ip_fields);
     return binary_ip_address;
 }
 bool Ip::set_value(String val) {
@@ -55,6 +57,7 @@ bool Ip::set_value(String val) {
     unsigned int temp_mask = ip_to_bin(ip_rule[0]);
     mask = temp_mask>>(32 - number_of_bits_to_check);
     //mask = temp_mask<<(32 - number_of_bits_to_check);
+    delete[](ip_rule);
     return true; //compl addition
 }
 

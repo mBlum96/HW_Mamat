@@ -73,5 +73,7 @@ int main(int argc, char**argv){
             parse_input(port_rule);
         }
     }
+    delete[](rule_fields);
+    delete[](rule_type);
     return 0;
 }

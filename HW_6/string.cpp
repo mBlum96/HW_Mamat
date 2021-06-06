@@ -2,7 +2,7 @@
 #include <cstring>
 #include <string.h>
 #include "string.h"
-
+#include <cstdlib>
 
 #define SPACE ' '
 
@@ -155,6 +155,8 @@ void String::split(const char *delimiters, String **output, size_t *size) const{
 
 	
 	*output = new String[num_of_strings];
+	//String string_array[num_of_strings];
+	
 	*size = num_of_strings;
 	if (output == NULL){
 		*size = num_of_strings;
@@ -215,7 +217,8 @@ int String::to_integer() const{
  * Does not change this.
  */
 String String::trim() const{
-    char *copied_string = new char[length+1];
+    //char *copied_string = new char[length+1];
+    char copied_string[length+1];
     int leading_index = 0;
     //int counter = 0; // comp
     int trailing_index = (int)length - 1;
@@ -228,7 +231,7 @@ String String::trim() const{
         trailing_index--;
     }
 
-    int len_after_trim = trailing_index-leading_index;
+    int len_after_trim = trailing_index-leading_index+1;
 
     char* clean_string = new char[len_after_trim+1]();
     int i = 0;
@@ -240,8 +243,15 @@ String String::trim() const{
         leading_index++;
         i++;
     }
+    
+    clean_string[len_after_trim] = '\0';
+    
+    String cleaned = String(clean_string);
+    delete[](clean_string);
+    //delete[](copied_string);
 
-    return String(clean_string); //the fun return String
+    //return String(clean_string); //the fun return String
+    return cleaned;
 }
 
 //String *a = new String();

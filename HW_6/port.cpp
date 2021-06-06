@@ -30,6 +30,8 @@ bool Port::set_value(String val){
     //checks if the range values are valid
     if (min_port < MIN_POSSIBLE_PORT || min_port > MAX_POSSIBLE_PORT) return false;
     if (max_port < MIN_POSSIBLE_PORT || max_port > MAX_POSSIBLE_PORT) return false;
+    
+    delete[](value_range);
     return (min_port <= max_port); //change here (clion advice)
 
 }
