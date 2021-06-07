@@ -4,20 +4,37 @@
 
 #define MIN_POSSIBLE_PORT 0
 #define MAX_POSSIBLE_PORT 65535
+#define DATA_SEPARATOR '-'
+#define NUM_FIELDS 2
 
-Port::Port(String pattern) : Field(pattern){ //i change here
+/**
+ * @brief single arg constructor
+ * @param pattern to be sent to parent constructor
+ */
+Port::Port(String pattern) : Field(pattern){
     min_port = 0;
     max_port = 0;
 }
 
+/**
+ * @brief destructor
+ */
 Port::~Port() = default;
 
+/**
+ * @brief sets value to the fields that were initialized in the
+ * constructor to zero
+ * @param val this is the rule address and number of bits, we pass these
+ * to the appropriate fields after manipulations
+ * @return bool if everything was successful we return true,
+ * otherwise we return false
+ */
 bool Port::set_value(String val){
     String *value_range;
     size_t size;
 
-    val.split("-", &value_range, &size);
-    if (size != 2){
+    val.split(DATA_SEPARATOR, &value_range, &size);
+    if (size != NUM_FIELDS){
         return false;
     }
     //clean the string
@@ -36,10 +53,13 @@ bool Port::set_value(String val){
 
 }
 
-
+/**
+ * @brief match_value checks if the packet port data matches the rules
+ * @param packet this is the packet string we want to check
+ * @return bool returns true if there is a match, false otherwise
+ */
 bool Port::match_value(String packet) const{
     int value = packet.to_integer();
-    return ((value >= min_port) && (value <= max_port));//made it <=,>= instead
-    //of <,>
+    return ((value >= min_port) && (value <= max_port));
 }
 
