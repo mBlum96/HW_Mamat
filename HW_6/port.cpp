@@ -4,7 +4,6 @@
 
 #define MIN_POSSIBLE_PORT 0
 #define MAX_POSSIBLE_PORT 65535
-#define DATA_SEPARATOR '-'
 #define NUM_FIELDS 2
 
 /**
@@ -33,7 +32,7 @@ bool Port::set_value(String val){
     String *value_range;
     size_t size;
 
-    val.split(DATA_SEPARATOR, &value_range, &size);
+    val.split("-", &value_range, &size);
     if (size != NUM_FIELDS){
         return false;
     }
