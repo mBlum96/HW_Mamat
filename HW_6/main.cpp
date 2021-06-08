@@ -3,10 +3,8 @@
 #include "ip.h"
 #include "port.h"
 #include "input.h"
-#define TYPE_VAL_SEPARATOR '='
 #define PORT_RULE '-'
 #define IP_RULE '/'
-#define SUBTYPE_SEPARATOR '-'
 #define IP_TYPE "ip"
 #define PORT_TYPE "port"
 enum main_consts {
@@ -43,9 +41,9 @@ int main(int argc, char**argv){
     }
     String gen_rule = argv[1];
     String *rule_fields;
-    gen_rule.split(TYPE_VAL_SEPARATOR, &rule_fields, &rule_fields_size);
+    gen_rule.split("=", &rule_fields, &rule_fields_size);
     message_trimmer(rule_fields,rule_fields_size);
-    rule_fields[0].split(SUBTYPE_SEPARATOR, &rule_type, &type_size);
+    rule_fields[0].split("-", &rule_type, &type_size);
     message_trimmer(rule_type, type_size);
     if (rule_type[1].equals(IP_TYPE)){
         Ip ip_rule = Ip(rule_fields[0]);
