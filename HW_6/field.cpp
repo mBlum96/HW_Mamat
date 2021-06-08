@@ -1,7 +1,5 @@
 #include "field.h"
 #include <string.h>
-#define DATA_SEPARATOR '='
-#define FIELD_SEPARATOR ','
 
 using namespace std;
 /**
@@ -24,12 +22,12 @@ Field::~Field() {}
  bool Field::match(String packet){ 	
 	String *sub_packet;
 	size_t size_of_sub_packets = 0;
-	packet.split(FIELD_SEPARATOR, &sub_packet, &size_of_sub_packets);
+	packet.split(",", &sub_packet, &size_of_sub_packets);
 	bool result = false;
 	String *sub_packet_details;
 		for(int i = 0; i < (int)size_of_sub_packets ; i++){
 			size_t size = 0;
-			sub_packet[i].split(DATA_SEPARATOR, &sub_packet_details, &size);
+			sub_packet[i].split("=", &sub_packet_details, &size);
 			if(pattern.equals(sub_packet_details[0].trim())){
 			result = match_value(sub_packet_details[1].trim());
             }

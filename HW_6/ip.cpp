@@ -1,9 +1,7 @@
 #include "ip.h"
 #include "string.h"
 #include "field.h"
-#define VALUE_SEPARATOR '='
-#define IP_FIELD_SEPARATOR '.'
-#define NUM_BITS_TO_CHECK '/'
+
 enum {
     FIELD_SIZE = 8,
     NUM_OF_FIELDS = 2,
@@ -29,8 +27,8 @@ Ip::~Ip() = default;
  * @return unsigned int this is the number after conversion
  */
 static unsigned int ip_to_bin(String input_ip){
-    String *ip_fields; //change here
-    char field_separator[NUM_OF_FIELDS] = IP_FIELD_SEPARATOR;  //change here
+    String *ip_fields;
+    char field_separator[NUM_OF_FIELDS] = "."; 
     size_t number_of_fields;
     input_ip.split(field_separator, &ip_fields, &number_of_fields);
     unsigned int binary_ip_address = 0;
@@ -40,7 +38,7 @@ static unsigned int ip_to_bin(String input_ip){
             binary_ip_address = ip_field_bin;
         }
         else{
-            binary_ip_address = binary_ip_address << FIELD_SIZE; //comp
+            binary_ip_address = binary_ip_address << FIELD_SIZE; 
             binary_ip_address = binary_ip_address | ip_field_bin;
         }
        
@@ -58,7 +56,7 @@ static unsigned int ip_to_bin(String input_ip){
 bool Ip::set_value(String val) {
     String *ip_rule;
     size_t size_of_fields;
-    val.split(NUM_BITS_TO_CHECK, &ip_rule, &size_of_fields);
+    val.split("/", &ip_rule, &size_of_fields);
     if (size_of_fields != NUM_OF_FIELDS){
         delete[](ip_rule);
         return false;
